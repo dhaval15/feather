@@ -1,18 +1,10 @@
-abstract class Response<T> {
-  final T _data;
+class Response<T> {
+  final T result;
+  final Error error;
+  final bool isSuccessful;
 
-  Response(this._data);
+  Response._({this.result, this.error}) : isSuccessful = result != null;
 
-  factory Response.success(T data) => Success._(data);
-  factory Response.failure(T error) => Failure._(error);
-}
-
-class Success<T> extends Response<T> {
-  Success._(T data) : super(data);
-  T get data => _data;
-}
-
-class Failure<T extends Error> extends Response<T> {
-  Failure._(T data) : super(data);
-  T get error => _data;
+  factory Response.success(T result) => Response._(result: result);
+  factory Response.failure(Error error) => Response._(error: error);
 }
