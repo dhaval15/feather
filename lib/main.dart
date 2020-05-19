@@ -1,3 +1,4 @@
+import 'package:feather/src/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -15,6 +16,7 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
         brightness: Brightness.dark,
       ),
+      home: SplashScreen(),
     );
   }
 }
