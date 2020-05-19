@@ -2,6 +2,7 @@ import 'response.dart';
 import '../models/models.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'refs.dart';
 
 mixin Api {
   Future<Response> addCollection(Collection collection);
@@ -19,7 +20,6 @@ class FirebaseApi with Api {
 
   factory FirebaseApi.ofUser(FirebaseUser user) => FirebaseApi._(user.uid);
 
-  static const String NOTES = 'notes', COLLECTIONS = 'collections';
   @override
   Future<Response> addCollection(Collection collection) async {
     final newReferenence = FirebaseDatabase.instance
