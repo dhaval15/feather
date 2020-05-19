@@ -22,8 +22,11 @@ class FirebaseApi with Api {
   static const String NOTES = 'notes', COLLECTIONS = 'collections';
   @override
   Future<Response> addCollection(Collection collection) async {
-    final newReferenence =
-        FirebaseDatabase.instance.reference().child(userId).push();
+    final newReferenence = FirebaseDatabase.instance
+        .reference()
+        .child(userId)
+        .child(COLLECTIONS)
+        .push();
     final newCollection = collection.copyWith(key: newReferenence.key);
     try {
       await newReferenence.set(newCollection.toJson());
@@ -34,9 +37,16 @@ class FirebaseApi with Api {
   }
 
   @override
-  Future<Response> addNote(Note note) {
-    // TODO: implement addNote
-    throw UnimplementedError();
+  Future<Response> addNote(Note note) async {
+    final newReferenence =
+        FirebaseDatabase.instance.reference().child(userId).child(NOTES).push();
+    final newNote = note.copyWith(key: newReferenence.key);
+    try {
+      await newReferenence.set(newNote.toJson());
+      return Response.success(newNote);
+    } catch (e) {
+      return Response.failure(e);
+    }
   }
 
   @override
