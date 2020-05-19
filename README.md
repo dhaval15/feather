@@ -1,12 +1,12 @@
 # Feather
 
-A simple note taking app build with flutter and firebase.
+A simple note taking app build with Flutter and Firebase.
 
 ## Features 
 
-[ ] Orgainize your notes using collection
-[ ] Offline Export
-[ ] Markdown Support
-[ ] Desktop App
-[ ] Web App
-[ ] Third party integration with various services
+- [ ] Orgainise your notes using collection
+- [ ] Offline Export
+- [ ] Markdown Support
+- [ ] Desktop App
+- [ ] Web App
+- [ ] Third party integration with various services
