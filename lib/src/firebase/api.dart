@@ -50,14 +50,32 @@ class FirebaseApi with Api {
   }
 
   @override
-  Future<Response> updateCollection(Collection collection) {
-    // TODO: implement updateCollection
-    throw UnimplementedError();
+  Future<Response> updateCollection(Collection collection) async {
+    final oldReferenence = FirebaseDatabase.instance
+        .reference()
+        .child(userId)
+        .child(COLLECTIONS)
+        .child(collection.key);
+    try {
+      await oldReferenence.set(collection.toJson());
+      return Response.success(collection);
+    } catch (e) {
+      return Response.failure(e);
+    }
   }
 
   @override
-  Future<Response> updateNote(Note note) {
-    // TODO: implement updateNote
-    throw UnimplementedError();
+  Future<Response> updateNote(Note note) async {
+    final oldReferenence = FirebaseDatabase.instance
+        .reference()
+        .child(userId)
+        .child(NOTES)
+        .child(note.key);
+    try {
+      await oldReferenence.set(note.toJson());
+      return Response.success(note);
+    } catch (e) {
+      return Response.failure(e);
+    }
   }
 }
