@@ -6,7 +6,7 @@ class AppTitle extends StatelessWidget with ScreenUtilMixin {
   Widget build(BuildContext context) {
     return Text(
       'Feather',
-      style: Theme.of(context).textTheme.headline1.copyWith(letterSpacing: 2),
+      style: Theme.of(context).textTheme.headline3.copyWith(letterSpacing: 4),
     );
   }
 }

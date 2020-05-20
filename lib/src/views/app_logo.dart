@@ -7,8 +7,8 @@ class AppLogo extends StatelessWidget with ScreenUtilMixin {
   Widget build(BuildContext context) {
     return SvgPicture.asset(
       'assets/feather.svg',
-      height: sh(48),
-      width: sw(48),
+      height: sh(96),
+      width: sw(96),
     );
   }
 }

@@ -2,6 +2,8 @@ import '../firebase/firebase.dart';
 import 'login_screen.dart';
 import 'home_screen.dart';
 import '../provider.dart';
+import '../views/views.dart';
+import '../utils/utils.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -9,7 +11,7 @@ class SplashScreen extends StatefulWidget {
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends State<SplashScreen> with ScreenUtilStateMixin {
   @override
   void initState() {
     super.initState();
@@ -17,6 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void checkForCredentials() async {
+    await Future.delayed(Duration(seconds: 3));
     final response = await AuthApi.get();
     if (!response.isSuccessful)
       Navigator.of(context)
@@ -34,6 +37,21 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+      body: SafeArea(
+        child: Container(
+          width: double.infinity,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              AppLogo(),
+              vGap(20),
+              AppTitle(),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
