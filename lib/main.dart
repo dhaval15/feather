@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'src/screens/screens.dart';
 import 'src/provider.dart';
+import 'src/utils/utils.dart';
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return Provider(
@@ -18,7 +19,12 @@ class MyApp extends StatelessWidget {
           visualDensity: VisualDensity.adaptivePlatformDensity,
           brightness: Brightness.dark,
         ),
-        home: SplashScreen(),
+        home: Builder(
+          builder: (BuildContext context) {
+            ScreenUtil.init(context);
+            return SplashScreen();
+          },
+        ),
       ),
     );
   }
