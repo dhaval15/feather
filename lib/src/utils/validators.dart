@@ -6,5 +6,5 @@ class Validators {
   static bool password(String text) =>
       text.contains(RegExp(r'[a-zA-Z]')) &&
       text.contains(RegExp(r'[0-9]')) &&
-      text.length > 6;
+      text.length >= 6;
 }
