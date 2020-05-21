@@ -38,6 +38,8 @@ class MyApp extends StatelessWidget {
           ),
           appBarTheme: AppBarTheme(
             elevation: 0,
+            textTheme: TextTheme(headline6: TextStyle(letterSpacing: 1)),
+            iconTheme: IconThemeData(size: 32),
           ),
         ),
         debugShowCheckedModeBanner: false,
