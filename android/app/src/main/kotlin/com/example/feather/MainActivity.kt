@@ -1,4 +1,4 @@
-package com.example.feather
+package com.brokenglass.feather
 
 import io.flutter.embedding.android.FlutterActivity
 
