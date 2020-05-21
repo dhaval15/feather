@@ -36,6 +36,9 @@ class MyApp extends StatelessWidget {
             hintStyle: TextStyle(color: Colors.white.withAlpha(92)),
             labelStyle: TextStyle(color: Colors.white),
           ),
+          appBarTheme: AppBarTheme(
+            elevation: 0,
+          ),
         ),
         debugShowCheckedModeBanner: false,
         home: Builder(

@@ -3,6 +3,11 @@ import 'package:flutter/material.dart';
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Feather'),
+        centerTitle: true,
+      ),
+    );
   }
 }
