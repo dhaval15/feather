@@ -7,4 +7,5 @@ class Validators {
       text.contains(RegExp(r'[a-zA-Z]')) &&
       text.contains(RegExp(r'[0-9]')) &&
       text.length >= 6;
+  static bool name(String text) => text.length >= 3;
 }
