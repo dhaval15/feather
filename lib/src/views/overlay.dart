@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:feather/src/firebase/response.dart';
 import 'package:flutter/material.dart';
 
 class OverlayWidget extends StatefulWidget {
@@ -31,15 +30,17 @@ class OverlayWidget extends StatefulWidget {
 
 class _OverlayWidgetState extends State<OverlayWidget> {
   StreamController<WidgetBuilder> _widgetController;
-
-  void show(WidgetBuilder builder) {
+  Completer _completer;
+  Future show(WidgetBuilder builder) async {
     _widgetController.add(builder);
+    _completer = Completer();
+    return _completer.future;
   }
 
-  void showAsync(WidgetBuilder builder) async {}
-
-  void dismiss() {
+  void dismiss({dynamic result}) {
     _widgetController.add(null);
+    _completer.complete(null);
+    _completer = null;
   }
 
   @override
