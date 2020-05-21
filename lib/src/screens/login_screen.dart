@@ -1,3 +1,5 @@
+import 'package:feather/src/screens/screens.dart';
+
 import '../provider.dart';
 
 import '../firebase/firebase.dart';
@@ -58,16 +60,22 @@ class _LoginScreenState extends State<LoginScreen> with ScreenUtilStateMixin {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Text(
-                            'Forget Password ?',
-                            style: TextStyle(
-                              decorationStyle: TextDecorationStyle.solid,
+                          GestureDetector(
+                            onTap: _forgotPasswordScreen,
+                            child: Text(
+                              'Forget Password ?',
+                              style: TextStyle(
+                                decorationStyle: TextDecorationStyle.solid,
+                              ),
                             ),
                           ),
-                          Text(
-                            'New to Feather ?',
-                            style: TextStyle(
-                              decorationStyle: TextDecorationStyle.solid,
+                          GestureDetector(
+                            onTap: _signupScreen,
+                            child: Text(
+                              'New to Feather ?',
+                              style: TextStyle(
+                                decorationStyle: TextDecorationStyle.solid,
+                              ),
                             ),
                           ),
                         ],
@@ -94,12 +102,26 @@ class _LoginScreenState extends State<LoginScreen> with ScreenUtilStateMixin {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
       Response<AuthApi> response =
-          await OverlayWidget.of(context).show((context) => LoadingContainer());
+          await OverlayWidget.of(context).show((context) => LoadingContainer(
+                task: () =>
+                    AuthApi.signInWithEmailAndPassword(emailId, password),
+              ));
       if (response != null && response.isSuccessful) {
         Provider.of(context).state.init(response.result);
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => HomeScreen()));
       } else {
         //Todo : Handle Login Error
       }
     }
+  }
+
+  void _signupScreen() {
+    Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => SignupScreen()));
+  }
+
+  void _forgotPasswordScreen() {
+    //TODO Add ForgotPasswordScreen and navigate to it.
   }
 }
