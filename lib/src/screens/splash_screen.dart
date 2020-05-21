@@ -22,16 +22,16 @@ class _SplashScreenState extends State<SplashScreen> with ScreenUtilStateMixin {
     await Future.delayed(Duration(seconds: 3));
     final response = await AuthApi.get();
     if (!response.isSuccessful)
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => LoginScreen()));
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => LoginScreen()));
     else if (response.result.isEmailVerified) {
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => LoginScreen()));
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => LoginScreen()));
     } else {
       AuthApi api = response.result;
       Provider.of(context).state.init(api);
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => HomeScreen()));
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => HomeScreen()));
     }
   }
 
