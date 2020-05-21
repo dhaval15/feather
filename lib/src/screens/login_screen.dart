@@ -1,39 +1,105 @@
+import '../provider.dart';
+
+import '../firebase/firebase.dart';
+
 import '../utils/utils.dart';
 import '../views/views.dart';
 import 'package:flutter/material.dart';
 
-class LoginScreen extends StatelessWidget with ScreenUtilMixin {
-  final GlobalKey<FormFieldState> _formKey = GlobalKey();
+class LoginScreen extends StatefulWidget {
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> with ScreenUtilStateMixin {
+  final _formKey = GlobalKey<FormState>();
+  String emailId, password;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Container(
-          padding: EdgeInsets.all(sw(20)),
-          width: double.infinity,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              AppTitle(),
-              vGap(32),
-              Column(
-                children: [
-                  TextField(
-                    decoration: InputDecoration(labelText: 'EmailId'),
+    return OverlayWidget(
+      child: Scaffold(
+        body: SafeArea(
+          child: Container(
+            padding: EdgeInsets.all(sw(20)),
+            width: double.infinity,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                AppTitle(),
+                vGap(32),
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        validator: (text) {
+                          if (Validators.emailId(text)) return null;
+                          return 'Invalid EmailId';
+                        },
+                        onSaved: (text) => this.emailId = text,
+                        decoration: InputDecoration(
+                            labelText: 'EmailId', hintText: 'EmailId'),
+                      ),
+                      vGap(20),
+                      TextFormField(
+                        validator: (text) {
+                          if (Validators.password(text)) return null;
+                          return 'Password should contains letters and digits and atleast 6 letters long';
+                        },
+                        onSaved: (text) => this.password = text,
+                        obscureText: true,
+                        decoration: InputDecoration(
+                            labelText: 'Password', hintText: 'Password'),
+                      ),
+                      vGap(20),
+                      vGap(10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            'Forget Password ?',
+                            style: TextStyle(
+                              decorationStyle: TextDecorationStyle.solid,
+                            ),
+                          ),
+                          Text(
+                            'New to Feather ?',
+                            style: TextStyle(
+                              decorationStyle: TextDecorationStyle.solid,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: FlatButton(
+                          child: Text('Login'),
+                          onPressed: _login,
+                        ),
+                      ),
+                    ],
                   ),
-                  vGap(20),
-                  TextField(
-                    obscureText: true,
-                    decoration: InputDecoration(labelText: 'Password'),
-                  ),
-                ],
-              ),
-            ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
+  }
+
+  void _login() async {
+    if (_formKey.currentState.validate()) {
+      _formKey.currentState.save();
+      Response<AuthApi> response =
+          await OverlayWidget.of(context).show((context) => LoadingContainer());
+      if (response != null && response.isSuccessful) {
+        Provider.of(context).state.init(response.result);
+      } else {
+        //Todo : Handle Login Error
+      }
+    }
   }
 }
