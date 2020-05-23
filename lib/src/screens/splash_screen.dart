@@ -24,10 +24,7 @@ class _SplashScreenState extends State<SplashScreen> with ScreenUtilStateMixin {
     if (!response.isSuccessful)
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => LoginScreen()));
-    else if (response.result.isEmailVerified) {
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => LoginScreen()));
-    } else {
+    else {
       AuthApi api = response.result;
       Provider.of(context).state.init(api);
       Navigator.of(context).pushReplacement(
