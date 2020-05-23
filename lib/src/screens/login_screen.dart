@@ -45,41 +45,6 @@ class _LoginScreenState extends State<LoginScreen> with ScreenUtilStateMixin {
                             labelText: 'EmailId', hintText: 'EmailId'),
                       ),
                       vGap(20),
-                      TextFormField(
-                        validator: (text) {
-                          if (Validators.password(text)) return null;
-                          return 'Password should contains letters and digits and atleast 6 letters long';
-                        },
-                        onSaved: (text) => this.password = text,
-                        obscureText: true,
-                        decoration: InputDecoration(
-                            labelText: 'Password', hintText: 'Password'),
-                      ),
-                      vGap(20),
-                      vGap(10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          GestureDetector(
-                            onTap: _forgotPasswordScreen,
-                            child: Text(
-                              'Forget Password ?',
-                              style: TextStyle(
-                                decorationStyle: TextDecorationStyle.solid,
-                              ),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: _signupScreen,
-                            child: Text(
-                              'New to Feather ?',
-                              style: TextStyle(
-                                decorationStyle: TextDecorationStyle.solid,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
                       Align(
                         alignment: Alignment.centerRight,
                         child: FlatButton(
@@ -103,8 +68,7 @@ class _LoginScreenState extends State<LoginScreen> with ScreenUtilStateMixin {
       _formKey.currentState.save();
       Response<AuthApi> response =
           await OverlayWidget.of(context).show((context) => LoadingContainer(
-                task: () =>
-                    AuthApi.signInWithEmailAndPassword(emailId, password),
+                task: () => AuthApi.sendVerificationLink(emailId),
               ));
       if (response != null && response.isSuccessful) {
         Provider.of(context).state.init(response.result);
@@ -114,14 +78,5 @@ class _LoginScreenState extends State<LoginScreen> with ScreenUtilStateMixin {
         //Todo : Handle Login Error
       }
     }
-  }
-
-  void _signupScreen() {
-    Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => SignupScreen()));
-  }
-
-  void _forgotPasswordScreen() {
-    //TODO Add ForgotPasswordScreen and navigate to it.
   }
 }
