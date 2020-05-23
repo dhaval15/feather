@@ -40,6 +40,16 @@ class AuthApi {
 
   bool get isEmailVerified => user.isEmailVerified;
 
+  static Future<Response<bool>> isAlreadyUser(String emailId) async {
+    try {
+      final authMethods = await FirebaseAuth.instance
+          .fetchSignInMethodsForEmail(email: emailId);
+      return Response.success(authMethods.isNotEmpty);
+    } catch (e) {
+      return Response.failure(e);
+    }
+  }
+
   static Future<Response<AuthApi>> createUserWithEmailAndPassword(
       String emailId, String password) async {
     try {
