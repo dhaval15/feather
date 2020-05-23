@@ -60,7 +60,8 @@ class AuthApi {
     }
   }
 
-  static Future<Response> confirmPasswod(String oobCode, String emailId) async {
+  static Future<Response> confirmPassword(
+      String oobCode, String emailId) async {
     try {
       await FirebaseAuth.instance.confirmPasswordReset(oobCode, emailId);
       return Response.success(null);
