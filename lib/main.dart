@@ -51,11 +51,10 @@ class MyApp extends StatelessWidget {
         ),
         routes: {
           'login': (context) {
-            context.initScreenUtil();
             return LoginScreen();
           },
+          'verification': (context) => VerificationScreen(),
           'home': (context) {
-            context.initScreenUtil();
             return HomeScreen();
           },
         },
