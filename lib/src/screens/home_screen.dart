@@ -1,5 +1,7 @@
+import 'package:feather/src/provider.dart';
 import 'package:flutter/material.dart';
 import '../style/style.dart';
+import '../views/views.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -19,6 +21,12 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
+      body: OverlayWidget(
+        alignment: Alignment.bottomCenter,
+        child: Container(
+          child: CollectionsGrid(),
+        ),
+      ),
     );
   }
 
@@ -28,5 +36,13 @@ class HomeScreen extends StatelessWidget {
 
   void _viewPopup() {
     //TODO implement View Changing Facility : List or Grid.
+  }
+}
+
+class CollectionsGrid extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    Provider provider = Provider.of(context);
+    return StreamBuilder();
   }
 }
