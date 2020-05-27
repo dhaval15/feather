@@ -1,6 +1,4 @@
-import '../platform/feather.dart';
-import '../firebase/firebase.dart';
-
+import 'package:feather/src/provider.dart';
 import '../utils/utils.dart';
 import '../views/views.dart';
 import 'package:flutter/material.dart';
@@ -13,25 +11,6 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> with ScreenUtilStateMixin {
   final _formKey = GlobalKey<FormState>();
   String emailId;
-
-  @override
-  void initState() {
-    super.initState();
-    initDynamicLinks();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  void initDynamicLinks() async {
-    Feather.instance.onIntent((data) async {
-      print(data);
-      final response = await AuthApi.verifyEmailLink(emailId, data);
-      print(response.isSuccessful);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,17 +44,13 @@ class _LoginScreenState extends State<LoginScreen> with ScreenUtilStateMixin {
                       alignment: Alignment.centerRight,
                       child: Builder(
                         builder: (context) => FlatButton(
-                          child: Text('Send Link'),
-                          onPressed: () => _login(context),
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Builder(
-                        builder: (context) => FlatButton(
-                          child: Text('Catch'),
-                          onPressed: () async {},
+                          child: Text('Next'),
+                          onPressed: () {
+                            if (_formKey.currentState.validate()) {
+                              _formKey.currentState.save();
+                              _checkUserAvailibilty();
+                            }
+                          },
                         ),
                       ),
                     ),
@@ -89,24 +64,54 @@ class _LoginScreenState extends State<LoginScreen> with ScreenUtilStateMixin {
     );
   }
 
-  void _login(BuildContext context) async {
-    if (_formKey.currentState.validate()) {
-      _formKey.currentState.save();
-      final result = await showDialog(
-          context: context,
-          builder: (context) => TaskDialog(
-                  task: Task(
-                task: () => AuthApi.sendVerificationLink(emailId),
-                cancelable: false,
-                runningLabel: 'Sending Link',
-                failureLabel: 'Unable to send link',
-                successLabel: 'Succesfully sent link',
-                successConsent: false,
-              )));
-
-      if (result != null) {
-        Navigator.of(context).pushReplacementNamed('emailsent');
-      }
-    }
+  void _checkUserAvailibilty() async {
+    final isFirstTimeUser = await Provider.of(context).isFirstTime(emailId);
+    if (isFirstTimeUser.isSuccessful && isFirstTimeUser.result)
+      Navigator.of(context).pushNamed('/name');
+    else
+      _sendLink();
   }
+
+  void _sendLink() async {
+    showDialog(
+        context: context,
+        builder: (context) => Dialog(
+              child: Slide(
+                builder: _runningDialog,
+              ),
+            ));
+  }
+
+  Widget _runningDialog(BuildContext context) => FeatherDialog(
+        running: true,
+        title: 'Sending Link',
+        task: () async {
+          final response =
+              await Provider.of(context).sendVerificationLink(emailId);
+          if (response.isSuccessful) {
+            Provider.of(context).storeEmailId(emailId);
+            Navigator.of(context).pushReplacementNamed('/verification');
+          } else
+            Slide.of(context).add(builder: _failureDialog);
+        },
+      );
+
+  Widget _failureDialog(BuildContext context) => FeatherDialog(
+        title: 'Something went wrong',
+        running: false,
+        actions: <Widget>[
+          FlatButton(
+            child: Text('Cancel'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          FlatButton(
+            child: Text('Retry'),
+            onPressed: () {
+              Slide.of(context).add(builder: _runningDialog);
+            },
+          ),
+        ],
+      );
 }
