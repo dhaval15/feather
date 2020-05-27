@@ -1,6 +1,3 @@
-import '../firebase/firebase.dart';
-import 'login_screen.dart';
-import 'home_screen.dart';
 import '../provider.dart';
 import '../views/views.dart';
 import '../utils/utils.dart';
@@ -20,15 +17,15 @@ class _SplashScreenState extends State<SplashScreen> with ScreenUtilStateMixin {
 
   void checkForCredentials() async {
     await Future.delayed(Duration(seconds: 3));
-    final response = await AuthApi.get();
-    if (!response.isSuccessful)
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => LoginScreen()));
+    final user = await Provider.getCurrentUser();
+    if (user != null)
+      Navigator.of(context).pushReplacementNamed('/home');
     else {
-      AuthApi api = response.result;
-      Provider.of(context).state.init(api);
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => HomeScreen()));
+      String emailId = Provider.of(context).fetchEmailId();
+      if (emailId != null)
+        Navigator.of(context).pushReplacementNamed('/verification');
+      else
+        Navigator.of(context).pushReplacementNamed('/login');
     }
   }
 
