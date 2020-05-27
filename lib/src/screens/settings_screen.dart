@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../utils/utils.dart';
-import '../views/views.dart';
 
 class SettingScreen extends StatelessWidget with ScreenUtilMixin {
   @override
@@ -10,7 +9,6 @@ class SettingScreen extends StatelessWidget with ScreenUtilMixin {
         title: Text('Settings'),
         centerTitle: true,
       ),
-      body: OverlayWidget(),
     );
   }
 }

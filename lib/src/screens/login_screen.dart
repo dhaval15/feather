@@ -67,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> with ScreenUtilStateMixin {
   void _checkUserAvailibilty() async {
     final isFirstTimeUser = await Provider.of(context).isFirstTime(emailId);
     if (isFirstTimeUser.isSuccessful && isFirstTimeUser.result)
-      Navigator.of(context).pushNamed('/name');
+      Navigator.of(context).pushNamed('/name', arguments: emailId);
     else
       _sendLink();
   }
@@ -90,6 +90,7 @@ class _LoginScreenState extends State<LoginScreen> with ScreenUtilStateMixin {
               await Provider.of(context).sendVerificationLink(emailId);
           if (response.isSuccessful) {
             Provider.of(context).storeEmailId(emailId);
+            Navigator.of(context).pop();
             Navigator.of(context).pushReplacementNamed('/verification');
           } else
             Slide.of(context).add(builder: _failureDialog);

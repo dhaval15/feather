@@ -1,4 +1,5 @@
-import 'package:feather/src/provider.dart';
+import '../provider.dart';
+import '../utils/screen_utils.dart';
 import 'package:flutter/material.dart';
 import '../platform/feather.dart';
 import '../views/views.dart';
@@ -8,7 +9,8 @@ class VerificationScreen extends StatefulWidget {
   _VerificationScreenState createState() => _VerificationScreenState();
 }
 
-class _VerificationScreenState extends State<VerificationScreen> {
+class _VerificationScreenState extends State<VerificationScreen>
+    with ScreenUtilStateMixin {
   String emailId;
   String name;
   String link;
@@ -30,15 +32,21 @@ class _VerificationScreenState extends State<VerificationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        padding: EdgeInsets.all(sw(20)),
         child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'Hello ',
-              style: Theme.of(context).textTheme.headline3,
-            ),
+            name != null
+                ? Text(
+                    'Hello $name',
+                    style: Theme.of(context).textTheme.headline5,
+                  )
+                : vGap(0),
+            vGap(16),
             Text(
               'We have sent a link to your $emailId, open the link in this app',
-              style: Theme.of(context).textTheme.headline5,
+              style: Theme.of(context).textTheme.bodyText1,
             ),
           ],
         ),
@@ -65,6 +73,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
           if (response.isSuccessful) {
             Provider.of(context).storeEmailId(null);
             Provider.of(context).storeName(null);
+            Navigator.of(context).pop();
             Navigator.of(context).pushReplacementNamed('/home');
           } else
             Slide.of(context).add(builder: _failureDialog);
@@ -84,6 +93,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
           FlatButton(
             child: Text('Resend Link'),
             onPressed: () {
+              Navigator.of(context).pop();
               Navigator.of(context).pushReplacementNamed('/login');
             },
           ),

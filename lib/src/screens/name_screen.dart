@@ -12,8 +12,10 @@ class _NameScreenState extends State<NameScreen> with ScreenUtilStateMixin {
   final _formKey = GlobalKey<FormState>();
   String name;
   String emailId;
+
   @override
   Widget build(BuildContext context) {
+    emailId = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -83,6 +85,7 @@ class _NameScreenState extends State<NameScreen> with ScreenUtilStateMixin {
           if (response.isSuccessful) {
             Provider.of(context).storeEmailId(emailId);
             Provider.of(context).storeName(name);
+            Navigator.of(context).pop();
             Navigator.of(context).pushReplacementNamed('/verification');
           } else
             Slide.of(context).add(builder: _failureDialog);

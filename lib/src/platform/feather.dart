@@ -9,9 +9,9 @@ class Feather {
     channel.setMethodCallHandler(_handleMethodCall);
   }
 
-  Function(dynamic data) _listener;
+  void Function(String data) _listener;
 
-  void onIntent(Function(dynamic) listener) {
+  void onIntent(void Function(String) listener) {
     this._listener = listener;
   }
 

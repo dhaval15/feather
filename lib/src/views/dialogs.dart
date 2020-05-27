@@ -1,3 +1,4 @@
+import '../utils/screen_utils.dart';
 import 'package:flutter/material.dart';
 
 class FeatherDialog extends StatefulWidget {
@@ -18,7 +19,8 @@ class FeatherDialog extends StatefulWidget {
   _FeatherDialogState createState() => _FeatherDialogState();
 }
 
-class _FeatherDialogState extends State<FeatherDialog> {
+class _FeatherDialogState extends State<FeatherDialog>
+    with ScreenUtilStateMixin {
   @override
   void initState() {
     super.initState();
@@ -28,15 +30,24 @@ class _FeatherDialogState extends State<FeatherDialog> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(8),
-      child: Column(children: [
-        Text(
-          widget.title,
-          style: Theme.of(context).textTheme.headline4,
-        ),
-        widget.running ? CircularProgressIndicator() : SizedBox(),
-        ...widget.actions,
-      ]),
+      padding: EdgeInsets.all(16),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            widget.title,
+            style: Theme.of(context).textTheme.headline5,
+          ),
+          vGap(16),
+          widget.running ? CircularProgressIndicator() : SizedBox(),
+          vGap(16),
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: widget.actions,
+          )
+        ],
+      ),
     );
   }
 }
