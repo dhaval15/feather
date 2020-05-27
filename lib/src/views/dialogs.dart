@@ -1,161 +1,42 @@
-import 'package:feather/src/firebase/response.dart';
 import 'package:flutter/material.dart';
 
-class TaskDialog extends StatefulWidget {
-  final Task task;
+class FeatherDialog extends StatefulWidget {
+  final String title;
+  final bool running;
+  final List<Widget> actions;
+  final Function() task;
 
-  const TaskDialog({Key key, @required this.task}) : super(key: key);
+  const FeatherDialog(
+      {Key key,
+      @required this.title,
+      @required this.running,
+      this.actions = const [],
+      this.task})
+      : super(key: key);
+
   @override
-  _TaskDialogState createState() => _TaskDialogState();
+  _FeatherDialogState createState() => _FeatherDialogState();
 }
 
-class _TaskDialogState extends State<TaskDialog> {
-  dynamic result;
-
+class _FeatherDialogState extends State<FeatherDialog> {
   @override
   void initState() {
     super.initState();
-    if (!widget.task.startConsent) execute();
+    widget.task?.call();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      child: Column(
-        children: <Widget>[
-          Text(
-            title,
-            style: Theme.of(context).textTheme.headline4,
-          ),
-          CircularProgressIndicator(),
-        ],
-      ),
+    return Container(
+      padding: EdgeInsets.all(8),
+      child: Column(children: [
+        Text(
+          widget.title,
+          style: Theme.of(context).textTheme.headline4,
+        ),
+        widget.running ? CircularProgressIndicator() : SizedBox(),
+        ...widget.actions,
+      ]),
     );
   }
-
-  void execute() async {
-    setState(() {
-      widget.task.state = TaskState.running;
-    });
-    final response = await widget.task.task();
-    if (response.isSuccessful) {
-      if (widget.task.startConsent) {
-        setState(() {
-          result = response.result;
-          widget.task.state = TaskState.success;
-        });
-      } else {
-        Navigator.of(context).pop(response.result);
-      }
-    } else {
-      setState(() {
-        widget.task.state = TaskState.failure;
-      });
-    }
-  }
-
-  List<Widget> get actions {
-    switch (widget.task.state) {
-      case TaskState.start:
-        return [
-          FlatButton(
-            child: Text(widget.task.cancelAction),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          FlatButton(
-            child: Text(widget.task.startAction),
-            onPressed: execute,
-          ),
-        ];
-        break;
-      case TaskState.running:
-        return widget.task.cancelable
-            ? [
-                FlatButton(
-                  child: Text(widget.task.cancelAction),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ]
-            : [];
-        break;
-      case TaskState.success:
-        return [
-          FlatButton(
-            child: Text(widget.task.successAction),
-            onPressed: () {
-              Navigator.of(context).pop(result);
-            },
-          ),
-        ];
-        break;
-      case TaskState.failure:
-        return [
-          FlatButton(
-            child: Text(widget.task.cancelAction),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          FlatButton(
-            child: Text(widget.task.retryAction),
-            onPressed: execute,
-          ),
-        ];
-        break;
-    }
-    return [];
-  }
-
-  String get title {
-    switch (widget.task.state) {
-      case TaskState.start:
-        return widget.task.startLabel;
-        break;
-      case TaskState.running:
-        return widget.task.runningLabel;
-        break;
-      case TaskState.success:
-        return widget.task.successLabel;
-        break;
-      case TaskState.failure:
-        return widget.task.failureLabel;
-        break;
-    }
-    return 'State Undefined';
-  }
-}
-
-class Task {
-  final String startLabel, runningLabel, successLabel, failureLabel;
-  final String startAction, cancelAction, retryAction, successAction;
-  final bool cancelable, startConsent, successConsent;
-  Future<Response> Function() task;
-  TaskState state;
-
-  Task({
-    this.startConsent = true,
-    this.successConsent = true,
-    this.successAction = 'Ok',
-    this.startAction,
-    this.cancelAction = 'Cancel',
-    this.retryAction = 'Retry',
-    this.cancelable = true,
-    this.startLabel,
-    this.runningLabel,
-    @required this.successLabel,
-    @required this.failureLabel,
-    this.state = TaskState.start,
-    @required this.task,
-  });
-}
-
-enum TaskState {
-  start,
-  running,
-  success,
-  failure,
 }
