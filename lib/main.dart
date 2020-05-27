@@ -15,7 +15,9 @@ class MyApp extends StatelessWidget {
         title: 'Feather',
         theme: ThemeData(
           primarySwatch: Colors.indigo,
+          accentColor: Color(0xffffdd77),
           visualDensity: VisualDensity.adaptivePlatformDensity,
+          canvasColor: Color(0xff191919),
           brightness: Brightness.dark,
           inputDecorationTheme: InputDecorationTheme(
             border: OutlineInputBorder(
@@ -38,23 +40,28 @@ class MyApp extends StatelessWidget {
           ),
           appBarTheme: AppBarTheme(
             elevation: 0,
-            textTheme: TextTheme(headline6: TextStyle(letterSpacing: 1)),
+            color: Colors.transparent,
+            textTheme: TextTheme(
+              headline6: TextStyle(
+                fontSize: 20,
+                letterSpacing: 2,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
             iconTheme: IconThemeData(size: 32),
           ),
         ),
         debugShowCheckedModeBanner: false,
-        home: Builder(
-          builder: (BuildContext context) {
+        initialRoute: '/',
+        routes: {
+          '/': (context) {
             context.initScreenUtil();
             return SplashScreen();
           },
-        ),
-        routes: {
-          'login': (context) {
-            return LoginScreen();
-          },
-          'verification': (context) => VerificationScreen(),
-          'home': (context) {
+          '/name': (context) => NameScreen(),
+          '/login': (context) => LoginScreen(),
+          '/verification': (context) => VerificationScreen(),
+          '/home': (context) {
             return HomeScreen();
           },
         },
