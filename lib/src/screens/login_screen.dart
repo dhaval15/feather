@@ -1,4 +1,4 @@
-import 'package:feather/src/provider.dart';
+import '../provider.dart';
 import '../utils/utils.dart';
 import '../views/views.dart';
 import 'package:flutter/material.dart';
