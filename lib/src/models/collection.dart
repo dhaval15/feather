@@ -1,36 +1,31 @@
+import 'status.dart';
+
 class Collection {
-  final String key;
-  final String title;
-  final String description;
-  final bool synced;
+  String key;
+  String title;
+  String description;
+  int status;
 
   Collection({
     this.key,
     this.title,
     this.description,
-    this.synced = false,
+    this.status = OFFLINE,
   });
+
+  void setForDeletion() => this.status = DELETE;
 
   factory Collection.fromJson(dynamic json) => Collection(
         key: json['k'],
         title: json['t'],
         description: json['d'],
-        synced: json['s'],
+        status: json['s'] ?? SYNCED,
       );
 
-  Collection copyWith(
-          {String key, String title, String description, bool synced}) =>
-      Collection(
-        key: key ?? this.key,
-        title: title ?? this.title,
-        description: description ?? this.description,
-        synced: synced,
-      );
-
-  Map<String, dynamic> toJson({bool online = false}) => {
+  Map<String, dynamic> toJson() => {
         'k': key,
         't': title,
         'd': description,
-        's': !online ? synced : null,
+        's': status,
       };
 }
