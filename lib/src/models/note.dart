@@ -1,46 +1,35 @@
+import 'status.dart';
+
 class Note {
-  final String key;
-  final String title;
-  final String content;
-  final String collectionId;
-  final bool synced;
+  String key;
+  String title;
+  String content;
+  String collectionId;
+  int status;
 
   Note({
     this.key,
     this.title,
     this.content,
     this.collectionId,
-    this.synced = false,
+    this.status = OFFLINE,
   });
+
+  void setForDeletion() => this.status = DELETE;
 
   factory Note.fromJson(dynamic json) => Note(
         key: json['k'],
         title: json['t'],
         content: json['c'],
         collectionId: json['i'],
-        synced: json['s'],
+        status: json['s'] ?? SYNCED,
       );
 
-  Note copyWith({
-    String key,
-    String title,
-    String content,
-    String collectionId,
-    bool synced,
-  }) =>
-      Note(
-        key: key ?? this.key,
-        title: title ?? this.title,
-        content: content ?? this.content,
-        collectionId: collectionId ?? this.collectionId,
-        synced: synced ?? this.synced,
-      );
-
-  Map<String, dynamic> toJson({bool online = false}) => {
+  Map<String, dynamic> toJson() => {
         'k': key,
         't': title,
         'c': content,
         'i': collectionId,
-        's': !online ? synced : null,
+        's': status,
       };
 }
