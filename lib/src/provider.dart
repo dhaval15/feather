@@ -2,12 +2,14 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:sembast/sembast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'firebase/firebase.dart';
 
 class Provider extends StatefulWidget {
+  final DatabaseFactory factory;
   final Widget child;
-  Provider({Key key, this.child}) : super(key: key);
+  Provider({Key key, this.child, this.factory}) : super(key: key);
 
   static _ProviderState of(BuildContext context) =>
       context.findAncestorStateOfType<_ProviderState>();
@@ -21,12 +23,10 @@ class Provider extends StatefulWidget {
 
 class _ProviderState extends State<Provider> {
   FirebaseUser user;
-  FirebaseApi database;
-  CollectionStore collectionStore;
-  NoteStore noteStore;
   StreamSubscription _subscription;
   Function(FirebaseUser) onAuthStateChanged;
   SharedPreferences preferences;
+  SembastApi featherApi;
 
   void setOnAuthStateChanged(Function(FirebaseUser) onAuthStateChanged) {
     this.onAuthStateChanged = onAuthStateChanged;
@@ -39,33 +39,19 @@ class _ProviderState extends State<Provider> {
     _subscription = FirebaseAuth.instance.onAuthStateChanged.listen((user) {
       this.user = user;
       onAuthStateChanged(user);
-      if (user != null)
-        init(user);
-      else
-        clear();
     });
+    featherApi = SembastApi(widget.factory);
+    featherApi.init();
   }
 
   void _loadSharedPreference() async {
     preferences = await SharedPreferences.getInstance();
   }
 
-  void init(FirebaseUser user) {
-    database = FirebaseApi.ofUser(user);
-    collectionStore = CollectionStore.of(user);
-    noteStore = NoteStore.of(user);
-  }
-
-  void clear() {
-    database = null;
-    collectionStore.dispose();
-    noteStore.dispose();
-  }
-
   @override
   void dispose() {
     super.dispose();
-    clear();
+    featherApi.dispose();
     _subscription.cancel();
   }
 
